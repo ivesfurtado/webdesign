@@ -15,7 +15,7 @@ Read through GitHub’s Markdown guide to get an understanding for how Markdown�
 By having one Markdown file represent each encyclopedia entry, we can make our entries more human-friendly to write and edit. When a user views our encyclopedia entry, though, we’ll need to convert that Markdown into HTML before displaying it to the user.
 
 ## Getting Started
-*Download the distribution code from https://cdn.cs50.net/web/2020/spring/projects/1/wiki.zip and unzip it.
+* Download the distribution code from https://cdn.cs50.net/web/2020/spring/projects/1/wiki.zip and unzip it.
 
 ## Understanding
 In the distribution code is a Django project called wiki that contains a single app called encyclopedia.
