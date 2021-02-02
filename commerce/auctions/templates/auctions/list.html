@@ -1,0 +1,45 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create Listing</h2>
+    <hr>
+    <form action="{% url 'list' %}" method='post'>
+        <div class="col-lg-3">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Product Title:</label>
+                <input type="text" id="title" name="title" placeholder="Product Title">
+            </div>
+            <div class="form-group">
+                <label for="date">Auction Ends:</label>
+                <input type="date" id="date" name="enddate" placeholder="Auction End">
+            </div>
+            <div class="form-group">
+                <label for="date">Auction Description:</label>
+                <textarea class="form-control" id="description" name="description" placeholder="Auction Description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="startingbid">Initial Bid:</label>
+                <input type="integer" id="startingbid" name="startingbid" placeholder="Starting Price">
+            </div>
+            <div class="form-group">
+                <label for="imageurl">Product Image URL:</label>
+                <input type="url" id="imageurl" name="imageurl" placeholder="Image URL">
+            </div>
+            <div class="form-group">
+                {% if categories %}
+                    <select name="category">
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="text" name="category" placeholder="Product Category">
+                {% endif %}
+            </div>
+            <button class="btn btn-outline-primary" type="submit">Create Auction</button>
+        </div>
+    </form>
+
+    <a href="{% url 'index' %}">Go Back.</a>
+{% endblock %}

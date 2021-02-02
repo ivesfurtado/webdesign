@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    <hr>
+
+    <div>
+    {% for listing in listings %}
+        <div class="row" style="padding-left: 15px;">
+            <div class="leftcol">
+                {% if listing.auction_imageurl %}
+                    <img src="{{ listing.auction_imageurl }}" class="center" alt="Product Thumb" width="150">
+                {% endif %}
+            </div>
+            <div class="rightcol">
+                <h3><strong><a href="{% url 'listing' listing.id %}">{{ listing.auction_title }}</a></h3>
+                <p>{{ listing.auction_pubdate }}</p>
+                <p>Ending date:</strong> {{ listing.auction_enddate }}</p>
+                <p><strong>Last bid:</strong> ${{ listing.auction_startingbid }}</p>
+                <p>{{ listing.auction_description }}</p>
+                <form action="{% url 'bid' %}" method="POST">
+                        <div class="input-group mb-3">
+                            {% csrf_token %}
+                            <span class="input-group-text">$</span>
+                            <input type="float" class="form-control" name ="bids"  min="0" step="1" placeholder="Bid Value">
+                            <input type="hidden" name="watchlist" value="banana">
+                            <input type="hidden" name="product" value="{{ listing.id }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">Place Bid</button>
+                            </div>
+                        </div>
+                </form>
+                </div>
+            </div>
+    <div class="clear"></div>
+    <hr>
+    <br/>
+    {% empty %}
+        No listing.  
+    {% endfor %}
+    </div>
+{% endblock %}

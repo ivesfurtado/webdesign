@@ -1,0 +1,209 @@
+{% extends "mail/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div id="app">
+    </div>
+
+    <div id="main"></div>
+    <script type="text/babel">
+        class Single_Mail extends React.Component {
+            get show() {
+                return this.props.activeSection === "single_mail";
+            }
+
+            constructor(props) {
+                super(props);
+
+                this.state = {
+                    mails: [],
+                    isLoading: false
+                };
+            }
+
+            componentDidMount() {
+                this.setState({ isLoading: true });
+
+                fetch(`/emails/3`)
+                .then(response => response.json())
+                .then(mail => this.setState({mails: mail, isLoading: false}));
+            }
+
+            render() {
+                if (this.show) {
+                    const {mails, isLoading} = this.state;
+
+                    if (isLoading) {
+                        return <p>Loading...</p>;
+                    }
+
+                    return (
+                        <div>
+                            <p class="header"><b>From: </b>{mails.sender}</p>
+                            <p class="header"><b>To: </b>{mails.recipients}</p>
+                            <p class="header"><b>Subject: </b>{mails.subject}</p>
+                            <p class="header"><b>Timestamp: </b>{mails.timestamp}</p>
+                            <button class="archive-button btn btn-sm btn-outline-primary">Reply</button>
+                            <hr/>
+                            <p class="text-break">{mails.body}</p>
+                        </div>
+                    );
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        class Compose extends React.Component {
+            get show() {
+                return this.props.activeSection === "compose";
+            }
+
+            constructor(props) {
+                super(props);
+            }
+
+            render() {
+                if (this.show) {
+                    return (
+                        <div class="compose-view">
+                            <h3>New Email</h3>
+                            <form id="compose-form">
+                                <div class="form-group">
+                                    From: <input disabled class="form-control" value="{{ request.user.email }}" />
+                                </div>
+                                <div class="form-group">
+                                    To: <input id="compose-recipients" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id="compose-subject" placeholder="Subject" />
+                                </div>
+                                <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
+                                <input type="submit" id="submit" class="btn btn-primary" />
+                            </form>
+                        </div>
+                    );
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        class Mails extends React.Component {
+            get show() {
+                return this.props.activeSection === "mails";
+            }
+
+            constructor(props) {
+                super(props);
+
+                this.state = {
+                    mails: [],
+                    isLoading: false
+                };
+            }
+
+            componentDidUpdate(prevProps) {
+                if (this.props.mailbox != prevProps.mailbox && this.props.activeSection != "compose") {
+                    this.setState({ isLoading: true });
+
+                    fetch(`/emails/${this.props.mailbox}`)
+                    .then(response => response.json())
+                    .then(mail => this.setState({mails: mail, isLoading: false}));
+                }
+            }
+
+            render() {
+                if (this.show) {
+                    const {mails, isLoading} = this.state;
+
+                    if (isLoading) {
+                        return <p>Loading...</p>;
+                    }
+
+                    let rows = [];
+                    for (let i = 0; i < mails.length; i++) {
+                        let url = `/emails/${mails[i]["id"]}`;
+                        rows.push(<div class="mail"><a href={url}><b>{mails[i]["sender"]}</b> | {mails[i]["subject"]} </a></div>);
+                    }
+
+                    return (
+                        <div>
+                            {rows}
+                        </div>
+                    );
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        const Buttons = ({ onToggle }) => (
+                <div className="buttons">
+                    <h2>{{ request.user.email }}</h2>
+                    <button name="inbox" class="btn btn-sm btn-outline-primary" onClick={onToggle}>Inbox</button>
+                    <button name="compose" class="btn btn-sm btn-outline-primary" onClick={onToggle}>Compose</button>
+                    <button name="sent" class="btn btn-sm btn-outline-primary" onClick={onToggle}>Sent</button>
+                    <button name="archive" class="btn btn-sm btn-outline-primary" onClick={onToggle}>Archived</button>
+                    <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
+                    <hr/>
+                </div>
+        );
+
+        const Main = ({ activeSection, mailbox }) => (
+            <React.Fragment>
+                <Single_Mail activeSection={activeSection} />
+                <Compose activeSection={activeSection} />
+                <Mails activeSection={activeSection} mailbox={mailbox} />
+            </React.Fragment>
+        )
+
+        class App extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    activeSection: "mails",
+                    mailbox: "inbox"
+                };
+
+                this.handleToggleSection = this.handleToggleSection.bind(this);
+            }
+
+            handleToggleSection(e) {
+                var { name } = e.target;
+                var { mailboxIn } = e.target;
+
+                if (name != "compose") {
+                    mailboxIn = name;
+                    name = "mails";
+                }
+
+                this.setState(() => ({
+                    activeSection: name,
+                    mailbox: mailboxIn
+                }));
+            }
+
+            render() {
+                return (
+                <div className="App">
+                    <Buttons onToggle={this.handleToggleSection} />
+                    <Main activeSection={this.state.activeSection} mailbox={this.state.mailbox} />
+                </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, document.querySelector("#app"));
+    </script>
+
+    <div id="single-email-view">
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'mail/inbox.js' %}"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+{% endblock %}

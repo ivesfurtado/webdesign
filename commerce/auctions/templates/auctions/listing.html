@@ -1,0 +1,63 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ product.auction_title }}</h2>
+    
+    <div class="row" style="padding-left: 15px;">
+        <div class="leftcol">
+            {% if product.auction_imageurl %}
+                <img src="{{ product.auction_imageurl }}" class="center" alt="Product Thumb" width="150">
+            {% endif %}
+        </div>
+        <div class="rightcol">
+            <p><strong>{{ product.auction_title }}</p>
+            <p>Ending date:</strong> {{ product.auction_enddate }}</p>
+            <p><strong>Last bid:</strong> ${{ product.auction_startingbid }}</p>
+            <p>{{ product.auction_description }}</p>
+            <form action="{% url 'bid' %}" method="POST">
+                    <div class="input-group mb-3">
+                        {% csrf_token %}
+                        <span class="input-group-text">$</span>
+                        <input type="float" class="form-control" name ="bids"  min="0" step="1" placeholder="Bid Value">
+                        <input type="hidden" name="product" value="{{ product.id }}">
+                        <input type="hidden" name="watchlist" value="banana">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="submit">Place Bid</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-success" name="watchlist" type="submit" value="add">Add to Watchlist</button>
+            </form>
+            </div>
+        </div>
+    
+    <hr>
+    {% if loggedin %}
+        <h3>Comment</h3>
+        <form action="{% url 'comment' %}" method='POST'>
+            {% csrf_token %}
+            <div>
+                <input type="hidden" name="product" value="{{ product.id }}">
+                <div class="form-group">
+                    <textarea class="form-control" id="comment" name="comment" placeholder="Insert Comment" rows="3"></textarea>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div class="alert alert-dark">
+            Only logged users can comment!
+        </div>
+    {% endif %}
+    {% if comments %}
+        {% for comment in comments %}
+            <div>
+                <h3>{{ comment.comments_user }}</h3>
+                <p>{{ comment.comments_pubdate }}</p>
+                <p>{{ comment.comments_content }}</p>
+            </div>
+            <br/>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
