@@ -1,6 +1,8 @@
 # Wiki
 Design a Wikipedia-like online encyclopedia.
 
+**Original Source: https://cs50.harvard.edu/web/2020/projects/1/wiki/**
+
 ## Background
 Wikipedia is a free online encyclopedia that consists of a number of encyclopedia entries on various topics.
 
