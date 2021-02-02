@@ -1,59 +1,44 @@
-# Wiki
-Design a Wikipedia-like online encyclopedia.
+# Commerce
+Design an eBay-like e-commerce auction site that will allow users to post auction listings, place bids on listings, comment on those listings, and add listings to a “watchlist.”
 
-**Original Source: https://cs50.harvard.edu/web/2020/projects/1/wiki/**
-
-## Background
-Wikipedia is a free online encyclopedia that consists of a number of encyclopedia entries on various topics.
-
-Each encyclopedia entry can be viewed by visiting that entry’s page. Visiting https://en.wikipedia.org/wiki/HTML, for example, shows the Wikipedia entry for HTML. Notice that the name of the requested page (HTML) is specified in the route /wiki/HTML. Recognize too, that the page’s content must just be HTML that your browser renders.
-
-In practice, it would start to get tedious if every page on Wikipedia had to be written in HTML. Instead, it can be helpful to store encyclopedia entries using a lighter-weight human-friendly markup language. Wikipedia happens to use a markup language called Wikitext, but for this project we’ll store encyclopedia entries using a markup language called Markdown.
-
-Read through GitHub’s Markdown guide to get an understanding for how Markdown’s syntax works. Pay attention in particular to what Markdown syntax looks like for headings, bold text, links, and lists.
-
-By having one Markdown file represent each encyclopedia entry, we can make our entries more human-friendly to write and edit. When a user views our encyclopedia entry, though, we’ll need to convert that Markdown into HTML before displaying it to the user.
+**Original source: https://cs50.harvard.edu/web/2020/projects/2/commerce/**
 
 ## Getting Started
-* Download the distribution code from https://cdn.cs50.net/web/2020/spring/projects/1/wiki.zip and unzip it.
+1. Download the distribution code from https://cdn.cs50.net/web/2020/spring/projects/2/commerce.zip and unzip it.
+2. In your terminal, cd into the commerce directory.
+3. Run python manage.py makemigrations auctions to make migrations for the auctions app.
+4. Run python manage.py migrate to apply migrations to your database.
 
 ## Understanding
-In the distribution code is a Django project called wiki that contains a single app called encyclopedia.
+In the distribution code is a Django project called commerce that contains a single app called auctions.
 
-First, open up encyclopedia/urls.py, where the URL configuration for this app is defined. Notice that we’ve started you with a single default route that is associated with the views.index function.
+First, open up auctions/urls.py, where the URL configuration for this app is defined. Notice that we’ve already written a few URLs for you, including a default index route, a /login route, a /logout route, and a /register route.
 
-Next, look at encyclopedia/util.py. You won’t need to change anything in this file, but notice that there are three functions that may prove useful for interacting with encyclopedia entries. list_entries returns a list of the names of all encyclopedia entries currently saved. save_entry will save a new encyclopedia entry, given its title and some Markdown content. get_entry will retrieve an encyclopedia entry by its title, returning its Markdown contents if the entry exists or None if the entry does not exist. Any of the views you write may use these functions to interact with encyclopedia entries.
+Take a look at auctions/views.py to see the views that are associated with each of these routes. The index view for now returns a mostly-empty index.html template. The login_view view renders a login form when a user tries to GET the page. When a user submits the form using the POST request method, the user is authenticated, logged in, and redirected to the index page. The logout_view view logs the user out and redirects them to the index page. Finally, the register route displays a registration form to the user, and creates a new user when the form is submitted. All of this is done for you in the distribution code, so you should be able to run the application now to create some users.
 
-Each encyclopedia entry will be saved as a Markdown file inside of the entries/ directory. If you check there now, you’ll see we’ve pre-created a few sample entries. You’re welcome to add more!
+Run python manage.py runserver to start up the Django web server, and visit the website in your browser. Click “Register” and register for an account. You should see that you are now “Signed in as” your user account, and the links at the top of the page have changed. How did the HTML change? Take a look at auctions/templates/auctions/layout.html for the HTML layout of this application. Notice that several parts of the template are wrapped in a check for if user.is_authenticated, so that different content can be rendered depending on whether the user is signed in or not. You’re welcome to change this file if you’d like to add or modify anything in the layout!
 
-Now, let’s look at encyclopedia/views.py. There’s just one view here now, the index view. This view returns a template encyclopedia/index.html, providing the template with a list of all of the entries in the encyclopedia (obtained by calling util.list_entries, which we saw defined in util.py).
-
-You can find the template by looking at encyclopedia/templates/encyclopedia/index.html. This template inherits from a base layout.html file and specifies what the page’s title should be, and what should be in the body of the page: in this case, an unordered list of all of the entries in the encyclopedia. layout.html, meanwhile, defines the broader structure of the page: each page has a sidebar with a search field (that for now does nothing), a link to go home, and links (that don’t yet work) to create a new page or visit a random page.
+Finally, take a look at auctions/models.py. This is where you will define any models for your web application, where each model represents some type of data you want to store in your database. We’ve started you with a User model that represents each user of the application. Because it inherits from AbstractUser, it will already have fields for a username, email, password, etc., but you’re welcome to add new fields to the User class if there is additional information about a user that you wish to represent. You will also need to add additional models to this file to represent details about auction listings, bids, comments, and auction categories. Remember that each time you change anything in auctions/models.py, you’ll need to first run python manage.py makemigrations and then python manage.py migrate to migrate those changes to your database.
 
 ## Specification
-Complete the implementation of your Wiki encyclopedia. You must fulfill the following requirements:
+Complete the implementation of your auction site. You must fulfill the following requirements:
 
-* Entry Page: Visiting /wiki/TITLE, where TITLE is the title of an encyclopedia entry, should render a page that displays the contents of that encyclopedia entry.
-    * The view should get the content of the encyclopedia entry by calling the appropriate util function.
-    * If an entry is requested that does not exist, the user should be presented with an error page indicating that their requested page was not found.
-    * If the entry does exist, the user should be presented with a page that displays the content of the entry. The title of the page should include the name of the entry.
-* Index Page: Update index.html such that, instead of merely listing the names of all pages in the encyclopedia, user can click on any entry name to be taken directly to that entry page.
-Search: Allow the user to type a query into the search box in the sidebar to search for an encyclopedia entry.
-    * If the query matches the name of an encyclopedia entry, the user should be redirected to that entry’s page.
-    * If the query does not match the name of an encyclopedia entry, the user should instead be taken to a search results page that displays a list of all encyclopedia entries that have the query as a substring. For example, if the search query were Py, then Python should appear in the search results.
-    * Clicking on any of the entry names on the search results page should take the user to that entry’s page.
-* New Page: Clicking “Create New Page” in the sidebar should take the user to a page where they can create a new encyclopedia entry.
-    * Users should be able to enter a title for the page and, in a textarea, should be able to enter the Markdown content for the page.
-    * Users should be able to click a button to save their new page.
-    * When the page is saved, if an encyclopedia entry already exists with the provided title, the user should be presented with an error message.
-    * Otherwise, the encyclopedia entry should be saved to disk, and the user should be taken to the new entry’s page.
-* Edit Page: On each entry page, the user should be able to click a link to be taken to a page where the user can edit that entry’s Markdown content in a textarea.
-    * The textarea should be pre-populated with the existing Markdown content of the page. (i.e., the existing content should be the initial value of the textarea).
-    * The user should be able to click a button to save the changes made to the entry.
-    * Once the entry is saved, the user should be redirected back to that entry’s page.
-* Random Page: Clicking “Random Page” in the sidebar should take user to a random encyclopedia entry.
-* Markdown to HTML Conversion: On each entry’s page, any Markdown content in the entry file should be converted to HTML before being displayed to the user. You may use the python-markdown2 package to perform this conversion, installable via pip3 install markdown2.
-    * Challenge for those more comfortable: If you’re feeling more comfortable, try implementing the Markdown to HTML conversion without using any external libraries, supporting headings, boldface text, unordered lists, links, and paragraphs. You may find using regular expressions in Python helpful.
+* Models: Your application should have at least three models in addition to the User model: one for auction listings, one for bids, and one for comments made on auction listings. It’s up to you to decide what fields each model should have, and what the types of those fields should be. You may have additional models if you would like.
+* Create Listing: Users should be able to visit a page to create a new listing. They should be able to specify a title for the listing, a text-based description, and what the starting bid should be. Users should also optionally be able to provide a URL for an image for the listing and/or a category (e.g. Fashion, Toys, Electronics, Home, etc.).
+* Active Listings Page: The default route of your web application should let users view all of the currently active auction listings. For each active listing, this page should display (at minimum) the title, description, current price, and photo (if one exists for the listing).
+* Listing Page: Clicking on a listing should take users to a page specific to that listing. On that page, users should be able to view all details about the listing, including the current price for the listing.
+    * If the user is signed in, the user should be able to add the item to their “Watchlist.” If the item is already on the watchlist, the user should be able to remove it.
+    * If the user is signed in, the user should be able to bid on the item. The bid must be at least as large as the starting bid, and must be greater than any other bids that have been placed (if any). If the bid doesn’t meet those criteria, the user should be presented with an error.
+    * If the user is signed in and is the one who created the listing, the user should have the ability to “close” the auction from this page, which makes the highest bidder the winner of the auction and makes the listing no longer active.
+    * If a user is signed in on a closed listing page, and the user has won that auction, the page should say so.
+Users who are signed in should be able to add comments to the listing page. The listing page should display all comments that have been made on the listing.
+* Watchlist: Users who are signed in should be able to visit a Watchlist page, which should display all of the listings that a user has added to their watchlist. Clicking on any of those listings should take the user to that listing’s page.
+* Categories: Users should be able to visit a page that displays a list of all listing categories. Clicking on the name of any category should take the user to a page that displays all of the active listings in that category.
+* Django Admin Interface: Via the Django admin interface, a site administrator should be able to view, add, edit, and delete any listings, comments, and bids made on the site.
 
 ## Hints
-* By default, when substituting a value in a Django template, Django HTML-escapes the value to avoid outputting unintended HTML. If you want to allow for an HTML string to be outputted, you can do so with the safe filter (as by adding |safe after the variable name you’re substituting).
+* To create a superuser account that can access Django’s admin interface
+* See Django’s Model field reference for possible field types for your Django model.
+* You’ll likely need to create some Django forms for various parts of this web application.
+* Adding the @login_required decorator on top of any view will ensure that only a user who is logged in can access that view.
+* You’re welcome to modify the CSS as much as you’d like, to make the website your own! Some sample screenshots are shown at the top of this page. These are meant only to be examples: your application need not be aesthetically the same as the screenshots here (you’re encouraged to be creative!).
