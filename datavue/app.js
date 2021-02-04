@@ -187,12 +187,32 @@ new Vue({
         order: {
            dir: 1,
            column: 'price'
+        },
+
+        filters: {
+           name: ''
+        },
+
+        perPage: 10,
+        currentPage: 1,
+
+        product: {
+           id: null,
+           name: '',
+           category: '',
+           price: ''
         }
    },
 
    computed: {
+      productsPaginated() {
+         let start = (this.currentPage - 1) * this.perPage;
+         let end = (this.currentPage * this.perPage);
+         return this.productsSorted.slice(start, end);
+      },
+
       productsSorted() {
-         return this.products.sort((a, b) => {
+         return this.productsFiltered.sort((a, b) => {
             let left = a[this.order.column], right = b[this.order.column];
             
             if (isNaN(left) && isNaN(right)) {
@@ -207,9 +227,40 @@ new Vue({
 
       sortType() {
          return this.order.dir == 1 ? 'ascending' : 'descending';
+      },
+
+      whenSearching() {
+         return this.filters.name.length > 0;
+      },
+
+      productsFiltered() {
+         let products = this.products;
+
+         if (this.filters.name) {
+            let findName = new RegExp(this.filters.name, 'i');
+            products = products.filter(e => e.name.match(findName))
+         }
+
+         return products;
+      },
+
+      isFirstPage() {
+         return this.currentPage == 1;
+      },
+
+      isLastPage() {
+         return this.currentPage >= this.pages;
+      },
+
+      pages() {
+         return Math.ceil(this.productsFiltered.length / this.perPage);
       }
    },
    methods: {
+      switchPage(page) {
+         this.currentPage = page;
+      },
+
       classes(column) {
          return [
             'sort-control',
@@ -220,6 +271,22 @@ new Vue({
       sort(column) {
          this.order.column = column;
          this.order.dir *= -1;
+      },
+
+      clearText() {
+         this.filters.name = '';
+      },
+
+      prev() {
+         if (!this.isFirstPage) {
+            this.currentPage--;
+         }
+      },
+
+      next() {
+         if (!this.isLastPage) {
+            this.currentPage++;
+         }
       }
    }
 })
