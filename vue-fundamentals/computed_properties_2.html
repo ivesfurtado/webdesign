@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .sort-control {
+            cursor: pointer;
+        }
+
+        .ascending::after {
+            content: "\25b2";
+        }
+
+        .descending::after {
+            content: "\25bc";
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="container py-5" id="app">
+        <h2>Top 10 Frameworks</h2>
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Framework</th>
+                    <th @click="changeOrder" :class="['sort-control', sortType]">Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="framework of frameworksSorted">
+                    <td>{{ framework.name }}</td>
+                    <td>{{ framework.score }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                frameworks: [
+                    {name: "ASP.NET", score: 88 },
+                    {name: "AngularJS", score: 78 },
+                    {name: "Ruby on Rails", score: 91 },
+                    {name: "ASP.NET MVC", score: 55 },
+                    {name: "React", score: 99 },
+                    {name: "Django", score: 100},
+                    {name: "Angular", score: 88},
+                    {name: "Laravel", score: 95},
+                    {name: "Spring", score: 80},
+                    {name: "Express", score: 92}
+                ],
+                order: -1
+            },
+            computed: {
+                frameworksSorted() {
+                    return this.frameworks.sort((a, b) => (a.score - b.score) * this.order);
+                },
+                sortType() {
+                    return this.order == 1 ? "ascending" : "descending";
+                }
+            },
+            methods: {
+                changeOrder() {
+                    return this.order *= -1;
+                }
+            }
+        })
+    </script>
+</body>
+</html>

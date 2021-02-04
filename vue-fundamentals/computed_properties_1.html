@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container py-5" id="app">
+        <form class="form-inline">
+            <select v-model="title" class="form-control mr-2">
+                <option value="Mr.">Mr.</option>
+                <option value="Ms.">Ms.</option>
+            </select>
+            <input type="text" v-model="name" placeholder="Name" class="form-control mr-2">
+            <input type="text" v-model="email" placeholder="Email" class="form-control">
+        </form>
+        <hr>
+        <div class="alert alert-info">
+            <p>Uppercase name: {{ upperName() }}</p>
+            <p>Lowercase name: {{ lowerName }}</p>
+        </div>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script>
+        let title = "Mr.";
+        new Vue({
+            el: '#app',
+            data: {
+                name: 'Jackson',
+                email: 'msjackson@gmail.com'
+            },
+            methods: {
+                upperName() {
+                    return (title + " " + this.name).toUpperCase();
+                }
+            },
+            computed: {
+                lowerName() {
+                    return (title + " " + this.name).toLowerCase();
+                }
+            }
+        })
+    </script>
+</body>
+</html>
