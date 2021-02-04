@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Conditional 2</title>
+</head>
+<body>
+    <div class="container-py-5" id="app">
+        <div class="container container-py-5" id="app">
+            <div v-if="showAlertPrimary" class="alert alert-primary">
+                v-if Alert
+            </div>
+            <div v-show="showAlertSecondary" class="alert alert-secondary">
+                v-show Alert
+            </div>
+        </div>
+
+        <div>
+            <button v-on:click="showAlertPrimary = !showAlertPrimary" class="btn btn-primary">Toggle Message (v-if)</button>
+            <button v-on:click="showAlertSecondary = !showAlertSecondary" class="btn btn-secondary">Toggle Message (v-show)</button>
+        </div>
+    </div>
+    
+    <script src="js/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                showAlertPrimary: true,
+                showAlertSecondary: true
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Conditional 1</title>
+</head>
+<body>
+    <div class="container-py-5" id="app">
+        <div v-if="records.length < 1" class="alert alert-warning">
+            You have no records!
+        </div>
+        <div v-else-if="records.length == 1" class="alert alert-primary">
+            You have only 1 record!
+        </div>
+        <div v-else class="alert alert-success">
+            You have some records!
+        </div>
+    </div>
+    
+    <script src="js/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                records: []
+            }
+        })
+    </script>
+</body>
+</html>
