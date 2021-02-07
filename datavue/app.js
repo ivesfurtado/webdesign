@@ -201,7 +201,9 @@ new Vue({
            name: '',
            category: '',
            price: ''
-        }
+        },
+
+        isEdit: false
    },
 
    computed: {
@@ -265,9 +267,63 @@ new Vue({
 
       pages() {
          return Math.ceil(this.productsFiltered.length / this.perPage);
+      },
+
+      modalTitle() {
+         return this.isEdit ? "Update Product" : "Add New Product";
+      },
+
+      modalTextButton() {
+         return this.isEdit ? "Update" : "Save";
       }
    },
    methods: {
+      remove(product) {
+         if (confirm("Are you sure?")) {
+            let index = this.products.findIndex(item => item.id == product.id);
+            this.products.splice(index, 1);
+         }
+      },
+
+      saveOrUpdate() {
+         if (this.isEdit) {
+            this.update();
+         } else {
+            this.save();
+         }
+      },
+
+      update() {
+         let index = this.products.findIndex(item => item.id == this.product.id);
+
+         this.products.splice(index, 1, this.product);
+
+         this.isEdit = false;
+
+         $(this.$refs.vuemodal).modal('hide');
+      },
+
+      add() {
+         this.isEdit = false;
+
+         this.product = {
+            id: null,
+            name: '',
+            category: '',
+            price: ''
+         };
+
+         $(this.$refs.vuemodal).modal('show');
+      },
+
+      edit(product) {
+         this.product = Object.assign({}, product);
+
+         this.isEdit = true;
+
+         $(this.$refs.vuemodal).modal('show');
+      },
+
       save() {
          if (this.product.name && this.product.category && this.product.price) {
             this.product.id = this.products.length + 1;
