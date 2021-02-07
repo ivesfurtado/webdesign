@@ -68,7 +68,7 @@
         </div>
         
         <!-- Modal -->
-        <div class="modal fade" id="product-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="product-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref="vuemodal">
             <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -83,12 +83,9 @@
                         </div>
                         <div class="form-group">
                             <label>Category</label>
-                            <input type="text" v-model="product.category" class="form-control">
-                            <!-- <select class="form-control">
-                                <option value="1">Category 1</option>
-                                <option value="2">Category 2</option>
-                                <option value="3">Category 3</option>
-                            </select>-->
+                            <select class="form-control">
+                                <option v-for="category of categories" :value="category">{{ category }}</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Price ($)</label>
