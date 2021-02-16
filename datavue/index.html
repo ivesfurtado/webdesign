@@ -43,7 +43,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="product of productsPaginated">
+                        <tr v-for="product of productsPaginated"
+                            :class="{ 'table-danger': removedProductId == product.id}">
                             <td>{{ product.name }}</td>
                             <td>{{ product.category }}</td>
                             <td>{{ product.price }}</td>
@@ -62,11 +63,11 @@
             <div class="card-footer">
                 <nav>
                   <ul class="pagination justify-content-center">
-                    <li class="page-item" :class="{ disabled: isFirstPage }"><a class="page-link" href="#" @click.prevent="prev">Previous</a></li>
+                    <li class="page-item" :class="{ disabled: isFirstPage }"><a class="page-link" href="?page=1" @click="prev($event)">First</a></li>
                     <li class="page-item" :class="{ active: currentPage == page }" v-for="page in pages">
-                        <a class="page-link" @click.prevent="switchPage(page)" ahref="#">{{ page }}</a>
+                        <a class="page-link" @click.prevent="switchPage(page, $event)" :href="`?page=${page}`">{{ page }}</a>
                     </li>
-                    <li class="page-item" :class="{ disabled: isLastPage }"><a class="page-link" href="#" @click.prevent="next">Next</a></li>
+                    <li class="page-item" :class="{ disabled: isLastPage }"><a class="page-link" :href="`?page=${pages}`" @click="next($event)">Last</a></li>
                   </ul>
                 </nav>
             </div>
@@ -84,17 +85,20 @@
                     <form>
                         <div class="form-group">
                             <label>Product Name</label>
-                            <input type="text" v-model="product.name" class="form-control">
+                            <input type="text" v-model="product.name" class="form-control" :class="{ 'is-invalid': errors.name }">
+                            <span class="invalid-feedback" v-if="errors.name">{{ errors.name[0] }}</span>
                         </div>
                         <div class="form-group">
                             <label>Category</label>
-                            <select v-model="product.category" class="form-control">
-                                <option v-for="category of categories" :value="category">{{ category }}</option>
+                            <select v-model="product.category_id" class="form-control" :class="{ 'is-invalid': errors.category_id }">
+                                <option v-for="category of categories" :value="category.id">{{ category.name }}</option>
                             </select>
+                            <span class="invalid-feedback" v-if="errors.category_id">{{ errors.category_id[0] }}</span>
                         </div>
                         <div class="form-group">
                             <label>Price ($)</label>
-                            <input type="number" v-model="product.price" class="form-control">
+                            <input type="number" v-model="product.price" class="form-control" :class="{ 'is-invalid': errors.price }">
+                            <span class="invalid-feedback" v-if="errors.price">{{ errors.price[0] }}</span>
                         </div>
                     </form>
                 </div>
@@ -111,6 +115,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
