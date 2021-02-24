@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $appends = ['url', 'avatar'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -54,6 +56,10 @@ class User extends Authenticatable
         $size = 32;
 
         return "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?s=" . $size;
+    }
+
+    public function getUrlAttribute() {
+        return "#";
     }
 
     public function favorites() {

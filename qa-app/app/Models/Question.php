@@ -12,6 +12,8 @@ class Question extends Model
 {
     protected $fillable = ['title', 'body'];
 
+    protected $appends = ['created_date'];
+
     use HasFactory;
     use VotableTrait;
 
