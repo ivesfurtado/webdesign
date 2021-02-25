@@ -73,7 +73,8 @@ export default {
             if (!this.signedIn) {
                 this.$toast.warning(`Please login to vote the ${this.name}`, 'Warning', {
                     timeout: 3000,
-                    position: 'bottomLeft'
+                    position: 'bottomLeft',
+                    displayMode: 2
                 });
 
                 return;
@@ -85,7 +86,8 @@ export default {
             .then(response => {
                 this.$toast.success(response.data.message, "Success", {
                     timeout: 3000,
-                    position: 'bottomLeft'
+                    position: 'bottomLeft',
+                    displayMode: 2
                 });
 
                 this.count = response.data.votesCount;

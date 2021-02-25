@@ -37,7 +37,8 @@ export default {
             if (!this.signedIn) {
                 this.$toast.warning("Please log in to favorite this question.", "Login Required", {
                     timeout: 3000,
-                    position: 'bottomLeft'
+                    position: 'bottomLeft',
+                    displayMode: 2
                 });
                 return;
             }
