@@ -12,7 +12,7 @@ class Question extends Model
 {
     protected $fillable = ['title', 'body'];
 
-    protected $appends = ['created_date'];
+    protected $appends = ['created_date', 'is_favorited', 'favorites_count'];
 
     use HasFactory;
     use VotableTrait;

@@ -37,11 +37,9 @@
         <input type="hidden" name="vote" value="-1">
     </form>
 
-    @if ($model instanceof App\Quesiton)
-        @include ('shared/_favorite', [
-            'model' => $model
-        ])
-    @elseif ($model instanceof App\Answer)
+    @if ($model instanceof App\Models\Question)
+        <favorite :question="{{ $model }}"></favorite>
+    @elseif ($model instanceof App\Models\Answer)
         @include ('shared/_accept', [
             'model' => $model
         ])
