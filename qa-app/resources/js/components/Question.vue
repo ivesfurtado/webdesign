@@ -59,9 +59,12 @@
 <script>
 import Vote from './Vote.vue';
 import UserInfo from './UserInfo.vue';
+import modification from '../mixins/modification';
 
 export default {
     props: ['question'],
+
+    mixins: [modification],
 
     components: {
         Vote,
@@ -73,7 +76,6 @@ export default {
             title: this.question.title,
             body: this.question.body,
             bodyHtml: this.question.body_html,
-            editing: false,
             id: this.question.id,
             beforeEditCache: null
         }
@@ -90,67 +92,35 @@ export default {
     },
 
     methods: {
-        destroy() {
-            this.$toast.question("Are you sure about that?", 'Confirm', {
-            timeout: 20000,
-            close: false,
-            overlay: true,
-            displayMode: 'once',
-            id: 'question',
-            zindex: 999,
-            position: 'center',
-            buttons: [
-                ['<button><b>YES</b></button>', (instance, toast) => {
-                    axios.delete(this.endpoint)
+        delete() {
+            axios.delete(this.endpoint)
                     .then(({data}) => {
                         this.$toast.success(data.message, "Success", {
                             timeout: 2000
                         });
                     });
-
-                    setTimeout(() => {
-                        window.location.href = "/questions";
-                    }, 3000);
-
-                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }, true],
-                ['<button>NO</button>', function (instance, toast) {
-        
-                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-        
-                }],
-            ]
-        });
+            setTimeout(() => {
+                window.location.href = "/questions";
+            }, 3000);
         },
 
-        edit() {
+        setEditCache() {
             this.beforeEditCache = {
                 body: this.body,
                 title: this.title
             };
-            this.editing = true;
         },
 
-        cancel() {
+        restoreFromCache() {
             this.body = this.beforeEditCache.body;
             this.title = this.beforeEditCache.title;
-            this.editing = false;
         },
 
-        update() {
-            axios.put(this.endpoint, {
+        payload() {
+            return {
                 body: this.body,
                 title: this.title
-            })
-            .then(response => {
-                this.editing = false;
-                this.bodyHtml = response.data.body_html;
-                this.$toast.success(response.data.message, "Success", { timeout: 3000 });
-            })
-            .catch(error => {
-                this.$toast.error(error.response.data.message, "Error", { timeout: 3000 });
-            });
+            }
         }
     }
 }
