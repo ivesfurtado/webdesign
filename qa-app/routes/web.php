@@ -7,6 +7,7 @@ use App\Http\Controllers\AcceptAnswerController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\VoteQuestionController;
 use App\Http\Controllers\VoteAnswerController;
+use App\Http\Controllers\Auth\LoginController;
 
 
 /*
@@ -19,10 +20,11 @@ use App\Http\Controllers\VoteAnswerController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes(['verify' => true]);
+
+Route::view('/{any}', 'spa')->where('any', '.*');
 
 Route::get('/', [QuestionsController::class, 'index']);
-
-Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

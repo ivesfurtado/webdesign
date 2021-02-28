@@ -122,6 +122,6 @@ export default {
                 title: this.title
             }
         }
-    }
+    },
 }
 </script>
