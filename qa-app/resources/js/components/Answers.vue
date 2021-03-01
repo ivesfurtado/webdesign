@@ -11,8 +11,8 @@
 
                         <answer @deleted="remove(index)" v-for="(answer, index) in answers" :answer="answer" :key="answer.id"></answer>
                     
-                        <div v-if="nextUrl" class="text-center mt-3">
-                            <button @click.prevent="fetch(nextUrl)" class="btn btn-outline-secondary">Load more answers</button>
+                        <div v-if="theNextUrl" class="text-center mt-3">
+                            <button @click.prevent="fetch(theNextUrl)" class="btn btn-outline-secondary">Load more answers</button>
                         </div>
                     </div>
                 </div>
@@ -25,6 +25,7 @@
 <script>
 import Answer from './Answer.vue';
 import NewAnswer from './NewAnswer.vue';
+import EventBus from '../event-bus'
 
 export default {
     props: ['question'],
@@ -34,7 +35,8 @@ export default {
             questionId: this.question.id,
             count: this.question.answers_count,
             answers: [],
-            nextUrl: null
+            nextUrl: null,
+            excludeAnswers: []
         }
     },
 
@@ -47,24 +49,39 @@ export default {
             axios.get(endpoint)
             .then(({ data }) => {
                 this.answers.push(... data.data);
-                this.nextUrl = data.next_page_url;
+                this.nextUrl = data.links.next;
             })
         },
 
         remove(index) {
             this.answers.splice(index, 1);
             this.count--;
+            if (this.count === 0) {
+                EventBus.$emit('answers-count-changed', this.count);
+            }
         },
 
         add(answer) {
+            this.excludeAnswers.push(answer);
             this.answers.push(answer);
             this.count++;
+            if (this.count === 1) {
+                EventBus.$emit('answers-count-changed', this.count);
+            }
         }
     },
 
     computed: {
         title() {
             return this.count + " " + (this.count > 1 ? 'Answers' : 'Answer');
+        },
+
+        theNextUrl () {
+            if (this.nextUrl && this.excludeAnswers.length) {
+                return this.nextUrl + 
+                    this.excludeAnswers.map(a => '&excludes[]=' + a.id).join('');
+            }
+            return this.nextUrl;
         }
     },
 

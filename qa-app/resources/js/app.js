@@ -17,6 +17,7 @@ import Authorization from './authorization/authorize';
 Vue.use(Authorization);
 
 import router from './router';
+import Spinner from './components/Spinner.vue';
 
 /**
  * The following block of code may be used to automatically register your
@@ -29,7 +30,7 @@ import router from './router';
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('question-page', require('./pages/QuestionPage').default);
+Vue.component('spinner', require('./components/Spinner').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -39,5 +40,40 @@ Vue.component('question-page', require('./pages/QuestionPage').default);
 
 const app = new Vue({
     el: '#app',
+
+    data: {
+        loading: false,
+        interceptor: null
+    },
+
+    created() {
+        this.enableInterceptor();
+    },
+
+    methods: {
+        enableInterceptor() {
+            this.interceptor = axios.interceptors.request.use((config) => {
+                    this.loading = true
+                    return config;
+                }, (error) => {
+                    this.loading = false
+                    return Promise.reject(error);
+                });
+                
+                // Add a response interceptor
+                axios.interceptors.response.use((response) => {
+                    this.loading = false
+                    return response;
+                }, (error) => {
+                    this.loading = false
+                    return Promise.reject(error);
+                });
+        },
+
+        disableInterceptor() {
+            axios.interceptors.request.eject(this.interceptor);
+        }
+    },
+
     router
 });

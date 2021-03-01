@@ -74,17 +74,22 @@
         </nav>
 
         <main class="py-4">
-            <router-view></router-view>
+            <transition name="fade" mode="out-in">
+                <router-view></router-view>
+            </transition>
         </main>
     </div>
 
     <!-- Scripts -->
     <script>
-        window.Auth = {!! json_encode([
+        window.Auth = @json([
             'signedIn' => Auth::check(),
             'user' => Auth::user(),
-            'url' => route('login')
-        ]) !!}
+        ]);
+        window.Urls = @json([
+            'api' => url('/api'),
+            'login' => route('login')
+        ]);
     </script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

@@ -12,7 +12,10 @@
                             <textarea v-model="body" class="form-control" rows="7" name="body" required></textarea>
                         </div>
                         <div class="form-group">
-                            <button type="submit" :disabled="isInvalid" class="btn btn-lg btn-outline-primary">Submit</button>
+                            <button type="submit" :disabled="isInvalid" class="btn btn-lg btn-outline-primary">
+                                <spinner :small="true" :min-width="59.22" v-if="$root.loading"></spinner>
+                                <span v-else>Submit</span>
+                            </button>
                         </div>
                     </form>
                 </div>

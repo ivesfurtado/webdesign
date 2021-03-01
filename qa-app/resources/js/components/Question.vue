@@ -24,7 +24,7 @@
                         <div class="d-flex align-items-center">
                             <h1>{{ title }}</h1>
                             <div class="ml-auto">
-                                <a href="/questions" class="btn btn-outline-secondary">Back to All Questions</a>
+                                <router-link exact :to="{ name: 'questions' }" class="btn btn-outline-secondary">Back to all Questions</router-link>
                             </div>
                         </div>
                     </div>
@@ -60,6 +60,7 @@
 import Vote from './Vote.vue';
 import UserInfo from './UserInfo.vue';
 import modification from '../mixins/modification';
+import EventBus from '../event-bus'
 
 export default {
     props: ['question'],
@@ -69,6 +70,12 @@ export default {
     components: {
         Vote,
         UserInfo
+    },
+
+    mounted () {
+        EventBus.$on('answers-count-changed', (count) => {
+            this.question.answers_count = count;
+        })
     },
 
     data() {
@@ -86,8 +93,12 @@ export default {
             return this.body.length < 10 || this.title.length < 10;
         },
 
-        endpoint() {
-            return `${this.id}`;
+        endpoint () {
+            return `/questions/${this.id}`;
+        },
+
+        uniqueName () {
+            return `question-${this.id}`; 
         }
     },
 
@@ -100,8 +111,8 @@ export default {
                         });
                     });
             setTimeout(() => {
-                window.location.href = "/questions";
-            }, 3000);
+                this.$router.push({ name: 'questions' });
+            }, 1500);
         },
 
         setEditCache() {

@@ -27,7 +27,7 @@ use App\Http\Controllers\Api\VoteAnswerController;
 */
 
 Route::post('/login', [LoginController::class, 'store']);
-Route::delete('/logout', [LoginController::class, 'destroy']);
+Route::delete('/logout', [LoginController::class, 'destroy'])->middleware('auth:api');
 Route::post('/register', RegisterController::class);
 
 Route::get('/questions', [QuestionsController::class, 'index']);

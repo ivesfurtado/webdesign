@@ -59,7 +59,7 @@ export default {
         },
 
         endpoint() {
-            return `${this.questionId}/answers/${this.id}`;
+            return `/questions/${this.questionId}/answers/${this.id}`;
         }
     },
 
