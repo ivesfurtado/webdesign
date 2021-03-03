@@ -22,7 +22,7 @@
                 <div v-else class="card-body">
                     <div class="card-title">
                         <div class="d-flex align-items-center">
-                            <h1>{{ title }}</h1>
+                            <h1 class="text-break">{{ title }}</h1>
                             <div class="ml-auto">
                                 <router-link exact :to="{ name: 'questions' }" class="btn btn-outline-secondary">Back to all Questions</router-link>
                             </div>
@@ -35,7 +35,7 @@
                         <vote :model="question" name="question"></vote>
                         
                         <div class="media-body">
-                            <div v-html="bodyHtml"></div>
+                            <div class="text-break" v-html="bodyHtml"></div>
                             <div class="row">
                                 <div class="col-4">
                                     <div class="ml-auto">

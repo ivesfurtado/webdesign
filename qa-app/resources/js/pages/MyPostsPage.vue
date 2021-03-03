@@ -25,7 +25,9 @@
                                         <span class="post-badge" :class="{ accepted: post.accepted }">{{ post.type }}</span>
                                         <span class="ml-4 votes-count" :class="{ accepted: post.accepted }">{{ post.votes_count }}</span>
                                     </div>
-                                    <div class="col-md-9 text-left">{{ post.title }}</div>
+                                    <div class="col-md-9 text-left">
+                                        <router-link :to="{ name: 'questions.show', params: {slug: post.slug} }">{{ post.title }}</router-link>
+                                    </div>
                                     <div class="col text-right">{{ post.created_at }}</div>
                                 </div>
                             </li>
@@ -89,6 +91,7 @@ export default {
         fetchPosts() {
             axios.get('/my-posts', { params: this.$route.query })
                 .then(({ data }) => {
+                    console.log(data);
                     this.posts = data.data;
                 })
                 .catch(errors => console.log(errors));

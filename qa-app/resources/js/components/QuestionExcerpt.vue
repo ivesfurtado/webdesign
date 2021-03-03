@@ -13,7 +13,7 @@
         </div>
         <div class="media-body">
             <div class="d-flex align-items-center">
-                <h3 class="mt-0">
+                <h3 class="mt-0 text-break">
                     <router-link :to="{ name: 'questions.show', params: {slug: question.slug} }">{{ question.title }}</router-link>
                 </h3>
                 <div class="ml-auto">
@@ -32,7 +32,7 @@
                 <a href="#">{{ question.user.name }}</a>
                 <small class="text-muted">{{ question.created_date }}</small>
             </p>
-            <div class="excerpt">
+            <div class="excerpt text-break">
                 {{ question.excerpt }}
             </div>
         </div>

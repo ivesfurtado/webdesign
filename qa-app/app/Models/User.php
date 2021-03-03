@@ -129,10 +129,12 @@ class User extends Authenticatable
 
             if ($post instanceof Answer) {
                 $item['type'] = 'A';
+                $item['slug'] = $post->question->id . '-' . $post->question->slug;
                 $item['title'] = $post->question->title;
                 $item['accepted'] = $post->question->best_answer_id === $post->id ? true : false;
             } elseif ($post instanceof Question) {
                 $item['type'] = 'Q';
+                $item['slug'] = $post->id . '-' . $post->slug;
                 $item['title'] = $post->title;
                 $item['accepted'] = (bool) $post->best_answer_id;
             }

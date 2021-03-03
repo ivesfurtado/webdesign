@@ -19,7 +19,10 @@ const routes = [
     {
         path: '/questions/create',
         component: CreateQuestionPage,
-        name: 'questions.create'
+        name: 'questions.create',
+        meta: {
+          requiresAuth: true
+        }
     },
     {
         path: '/questions/:id/edit',

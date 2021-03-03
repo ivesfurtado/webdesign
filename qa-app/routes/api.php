@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\QuestionsController;
 use App\Http\Controllers\Api\QuestionDetailsController;
-use App\Http\Controllers\Api\QuestionDetailsResource;
 use App\Http\Controllers\Api\AnswersController;
 use App\Http\Controllers\Api\AcceptAnswerController;
 use App\Http\Controllers\Api\FavoritesController;

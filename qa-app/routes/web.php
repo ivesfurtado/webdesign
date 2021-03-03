@@ -1,14 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\QuestionsController;
-use App\Http\Controllers\AnswersController;
-use App\Http\Controllers\AcceptAnswerController;
-use App\Http\Controllers\FavoritesController;
-use App\Http\Controllers\VoteQuestionController;
-use App\Http\Controllers\VoteAnswerController;
-use App\Http\Controllers\Auth\LoginController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -23,18 +15,3 @@ use App\Http\Controllers\Auth\LoginController;
 Auth::routes(['verify' => true]);
 
 Route::view('/{any}', 'spa')->where('any', '.*');
-
-Route::get('/', [QuestionsController::class, 'index']);
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::resource('questions', QuestionsController::class)->except('show');
-Route::resource('questions.answers', AnswersController::class)->except(['create', 'show']);
-Route::get('/questions/{slug}', [QuestionsController::class, 'show'])->name('questions.show');
-Route::post('/answers/{answer}/accept', AcceptAnswerController::class)->name('answers.accept');
-
-Route::post('/questions/{question}/favorites', [FavoritesController::class, 'store'])->name('questions.favorite');
-Route::delete('/questions/{question}/favorites', [FavoritesController::class, 'destroy'])->name('questions.unfavorite');
-
-Route::post('/questions/{question}/vote', VoteQuestionController::class);
-Route::post('/answers/{answer}/vote', VoteAnswerController::class);

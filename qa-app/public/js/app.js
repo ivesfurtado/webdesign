@@ -12657,6 +12657,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -12674,6 +12676,7 @@ __webpack_require__.r(__webpack_exports__);
         params: this.$route.query
       }).then(function (_ref) {
         var data = _ref.data;
+        console.log(data);
         _this.posts = data.data;
       })["catch"](function (errors) {
         return console.log(errors);
@@ -13171,7 +13174,10 @@ var routes = [{
 }, {
   path: '/questions/create',
   component: _pages_CreateQuestionPage__WEBPACK_IMPORTED_MODULE_4__.default,
-  name: 'questions.create'
+  name: 'questions.create',
+  meta: {
+    requiresAuth: true
+  }
 }, {
   path: '/questions/:id/edit',
   component: _pages_EditQuestionPage__WEBPACK_IMPORTED_MODULE_5__.default,
@@ -50607,7 +50613,10 @@ var render = function() {
               ]
             )
           : _c("div", [
-              _c("span", { domProps: { innerHTML: _vm._s(_vm.bodyHtml) } }),
+              _c("span", {
+                staticClass: "text-break",
+                domProps: { innerHTML: _vm._s(_vm.bodyHtml) }
+              }),
               _vm._v(" "),
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-4" }, [
@@ -51069,7 +51078,9 @@ var render = function() {
           : _c("div", { staticClass: "card-body" }, [
               _c("div", { staticClass: "card-title" }, [
                 _c("div", { staticClass: "d-flex align-items-center" }, [
-                  _c("h1", [_vm._v(_vm._s(_vm.title))]),
+                  _c("h1", { staticClass: "text-break" }, [
+                    _vm._v(_vm._s(_vm.title))
+                  ]),
                   _vm._v(" "),
                   _c(
                     "div",
@@ -51101,6 +51112,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "media-body" }, [
                     _c("div", {
+                      staticClass: "text-break",
                       domProps: { innerHTML: _vm._s(_vm.bodyHtml) }
                     }),
                     _vm._v(" "),
@@ -51218,7 +51230,7 @@ var render = function() {
       _c("div", { staticClass: "d-flex align-items-center" }, [
         _c(
           "h3",
-          { staticClass: "mt-0" },
+          { staticClass: "mt-0 text-break" },
           [
             _c(
               "router-link",
@@ -51283,7 +51295,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "excerpt" }, [
+      _c("div", { staticClass: "excerpt text-break" }, [
         _vm._v("\n            " + _vm._s(_vm.question.excerpt) + "\n        ")
       ])
     ])
@@ -51861,9 +51873,25 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "col-md-9 text-left" }, [
-                              _vm._v(_vm._s(post.title))
-                            ]),
+                            _c(
+                              "div",
+                              { staticClass: "col-md-9 text-left" },
+                              [
+                                _c(
+                                  "router-link",
+                                  {
+                                    attrs: {
+                                      to: {
+                                        name: "questions.show",
+                                        params: { slug: post.slug }
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(post.title))]
+                                )
+                              ],
+                              1
+                            ),
                             _vm._v(" "),
                             _c("div", { staticClass: "col text-right" }, [
                               _vm._v(_vm._s(post.created_at))
