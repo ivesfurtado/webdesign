@@ -27,3 +27,7 @@ Since there are already Factory and Seeder configured, you can run the following
 ```
 php artisan migrate:fresh --seed
 ```
+You need to install passport keys as well.
+```
+php artisan passport:keys
+```
